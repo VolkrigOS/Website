@@ -1,4 +1,4 @@
-const url = "https://api.github.com/repos/pietroago/volkrig.github.io/contents/packages";
+const url = "https://api.github.com/repos/pietroago/volkrigOS/contents/packages";
 
 const packageList =
     document.getElementById("package-list");
@@ -88,7 +88,7 @@ function showPackages(list) {
             document.createElement("a");
 
         link.href =
-            `https://github.com/pietroago/volkrig.github.io/tree/main/packages/${pkg.architecture}/${pkg.name}`;
+            `https://github.com/pietroago/volkrigOS/tree/main/packages/${pkg.architecture}/${pkg.name}`;
 
         link.textContent =
             pkg.name;
