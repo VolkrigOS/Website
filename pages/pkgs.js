@@ -1,13 +1,13 @@
-const url = "https://api.github.com/repos/pietroago/volkrigOS/contents/packages";
+const API = "https://api.github.com/repos/pietroago/volkrigOS/contents/packages";
 
 const packageList =
     document.getElementById("package-list");
 
-const searchInput =
-    document.getElementById("package-search");
-
 const searchForm =
     document.getElementById("search-form");
+
+const searchInput =
+    document.getElementById("package-search");
 
 let packages = [];
 
@@ -16,13 +16,15 @@ async function loadPackages() {
 
     try {
 
-        const response = await fetch(url);
+        const architecturesResponse =
+            await fetch(API);
 
-        if (!response.ok) {
-            throw new Error("GitHub API error");
+        if (!architecturesResponse.ok) {
+            throw new Error("could not access packages repository");
         }
 
-        const architectures = await response.json();
+        const architectures =
+            await architecturesResponse.json();
 
         for (const architecture of architectures) {
 
@@ -37,21 +39,24 @@ async function loadPackages() {
                 continue;
             }
 
-            const packageDirectories =
+            const files =
                 await response.json();
 
-            for (const pkg of packageDirectories) {
+            for (const file of files) {
 
-                if (pkg.type !== "dir") {
+                if (
+                    file.type !== "file" ||
+                    !file.name.endsWith(".tar.xz")
+                ) {
                     continue;
                 }
 
                 packages.push({
-                    name: pkg.name,
+                    name: file.name,
                     architecture: architecture.name,
-                    url: pkg.url
+                    download: file.download_url,
+                    github: file.html_url
                 });
-
             }
         }
 
@@ -87,11 +92,8 @@ function showPackages(list) {
         const link =
             document.createElement("a");
 
-        link.href =
-            `https://github.com/pietroago/volkrigOS/tree/main/packages/${pkg.architecture}/${pkg.name}`;
-
-        link.textContent =
-            pkg.name;
+        link.href = pkg.download;
+        link.textContent = pkg.name;
 
         li.appendChild(link);
 
@@ -106,7 +108,7 @@ function showPackages(list) {
 
 searchForm.addEventListener(
     "submit",
-    function(event) {
+    function (event) {
 
         event.preventDefault();
 
