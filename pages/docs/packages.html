@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Volkrig OS</title>
+
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+<header>
+
+<nav>
+    <div>
+        <a href="../../index.html">/main</a> |
+        <a href="https://github.com/pietroago/volkrigOS">/github</a> |
+        <a href="../install.html">/install</a> |
+        <a href="../docs.html">/docs</a> |
+        <a href="../pkgs.html">/pkgs</a>
+    </div>
+</nav>
+
+<h1>
+    <a href="../../index.html">Volkrig OS</a>
+    <span id="page"></span>
+</h1>
+
+</header>
+
+
+<nav id="side-bar">
+
+<div>
+
+    <p class="sideBarTitle">pages:</p>
+
+    <ul>
+        <li><a href="../../index.html">&rsaquo; /main</a></li>
+        <li><a href="https://github.com/pietroago/volkrigOS">&rsaquo; /github</a></li>
+        <li><a href="../install.html">&rsaquo; /install</a></li>
+        <li><a href="../docs.html">&rsaquo; /docs</a></li>
+        <li><a href="../pkgs.html">&rsaquo; /pkgs</a></li>
+    </ul>
+
+</div>
+
+</nav>
+
+
+<article>
+
+<h2>packages</h2>
+
+<p>First, to install packages you will need</p>
+<code>wget and vpkg (Default for the system)</code>
+<p>Check for wifi using <code>ip a</code></p>
+<h3>Having problems with internet? <a href="internet.html">Click here!</a></h3>
+<p>Let's install apt for example</p>
+<code>
+wget -o apt https://raw.githubusercontent.com/pietroago/volkrigOS/refs/heads/main/packages/x86/apt.vpkg
+vpkg -i ./apt.vpkg
+</code>
+<p>And now, you have apt, but for anothers packages you can use our <a href="https://github.com/pietroago/volkrigOS/tree/main/packages">official repository</a> or another repository</p>
+</article>
+
+
+<footer>
+
+</footer>
+
+
+<script src="../script.js"></script>
+
+</body>
+</html>
