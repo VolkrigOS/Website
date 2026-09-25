@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="icon" type="image/png" href="../assets/favicon.png">
     <title>Volkrig OS</title>
 
     <link rel="stylesheet" href="style.css">
@@ -13,22 +13,10 @@
 <body>
 
 <header>
-
-<nav>
-    <div>
-        <a href="../index.html">/main</a> |
-        <a href="https://github.com/pietroago/volkrigOS">/github</a> |
-        <a href="install.html">/install</a> |
-        <a href="docs.html">/docs</a> |
-        <a href="pkgs.html">/pkgs</a>
-    </div>
-</nav>
-
 <h1>
     <a href="../index.html">Volkrig OS</a>
     <span id="page"></span>
 </h1>
-
 </header>
 
 
@@ -53,8 +41,6 @@
 
 <article>
 
-<h2>packages</h2>
-
 <p>
     search packages available for Volkrig OS.
 </p>
@@ -68,6 +54,11 @@
         placeholder="package name..."
         autocomplete="off"
     >
+    <select id="package-type">
+        <option value="utils">Utils</option>
+        <option value="network">Network</option>
+        <option value="system">System</option>
+    </select>
 
     <button type="submit">
         search

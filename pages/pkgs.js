@@ -1,4 +1,7 @@
-const API = "https://api.github.com/repos/pietroago/volkrigOS/contents/packages";
+const API =
+    "https://api.github.com/repos/VolkrigOS/packages/contents";
+
+const ARCHITECTURE = "x86_64";
 
 const packageList =
     document.getElementById("package-list");
@@ -9,61 +12,93 @@ const searchForm =
 const searchInput =
     document.getElementById("package-search");
 
+const packageType =
+    document.getElementById("package-type");
+
 let packages = [];
 
+async function getPackages(url, type) {
+    const response = await fetch(url);
 
-async function loadPackages() {
+    if (!response.ok) {
+        return;
+    }
 
-    try {
+    const entries = await response.json();
 
-        const architecturesResponse =
-            await fetch(API);
-
-        if (!architecturesResponse.ok) {
-            throw new Error("could not access packages repository");
+    for (const entry of entries) {
+        if (entry.type === "dir") {
+            await getPackages(entry.url, type || entry.name);
+            continue;
         }
 
-        const architectures =
-            await architecturesResponse.json();
+        if (
+            entry.type !== "file" ||
+            !entry.name.endsWith(".vpkg")
+        ) {
+            continue;
+        }
 
-        for (const architecture of architectures) {
+        packages.push({
+            name: entry.name,
+            type,
+            download: entry.download_url,
+            github: entry.html_url
+        });
+    }
+}
 
-            if (architecture.type !== "dir") {
-                continue;
-            }
+async function loadTypes() {
+    const response =
+        await fetch(`${API}/${ARCHITECTURE}`);
 
-            const response =
-                await fetch(architecture.url);
+    if (!response.ok) {
+        throw new Error("could not load package types");
+    }
 
-            if (!response.ok) {
-                continue;
-            }
+    const entries =
+        await response.json();
 
-            const files =
-                await response.json();
+    packageType.innerHTML =
+        '<option value="">All packages</option>';
 
-            for (const file of files) {
+    for (const entry of entries) {
+        if (entry.type !== "dir") {
+            continue;
+        }
 
-                if (
-                    file.type !== "file" ||
-                    !file.name.endsWith(".tar.xz")
-                ) {
-                    continue;
-                }
+        const option =
+            document.createElement("option");
 
-                packages.push({
-                    name: file.name,
-                    architecture: architecture.name,
-                    download: file.download_url,
-                    github: file.html_url
-                });
-            }
+        option.value = entry.name;
+        option.textContent = entry.name;
+
+        packageType.appendChild(option);
+    }
+}
+
+async function loadPackages() {
+    try {
+        packages = [];
+
+        const type =
+            packageType.value.trim();
+
+        if (type) {
+            await getPackages(
+                `${API}/${ARCHITECTURE}/${type}`,
+                type
+            );
+        } else {
+            await getPackages(
+                `${API}/${ARCHITECTURE}`,
+                null
+            );
         }
 
         showPackages(packages);
 
     } catch (error) {
-
         console.error(error);
 
         packageList.innerHTML =
@@ -71,13 +106,10 @@ async function loadPackages() {
     }
 }
 
-
 function showPackages(list) {
-
     packageList.innerHTML = "";
 
     if (list.length === 0) {
-
         packageList.innerHTML =
             "<li>no packages found.</li>";
 
@@ -85,7 +117,6 @@ function showPackages(list) {
     }
 
     for (const pkg of list) {
-
         const li =
             document.createElement("li");
 
@@ -98,18 +129,16 @@ function showPackages(list) {
         li.appendChild(link);
 
         li.append(
-            ` — ${pkg.architecture}`
+            ` — ${pkg.type}`
         );
 
         packageList.appendChild(li);
     }
 }
 
-
 searchForm.addEventListener(
     "submit",
-    function (event) {
-
+    event => {
         event.preventDefault();
 
         const query =
@@ -128,5 +157,14 @@ searchForm.addEventListener(
     }
 );
 
+packageType.addEventListener(
+    "change",
+    loadPackages
+);
 
-loadPackages();
+async function init() {
+    await loadTypes();
+    await loadPackages();
+}
+
+init();

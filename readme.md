@@ -6,3 +6,7 @@ another distro using glibc and toybox, but i focused in being minimal.
 you can install any package manager using vpkg (Volkrig package manager)!
 
 so, you can use your only repo, apt works on the os, pacman and anothers...
+
+## RELEASES
+
+finally, 0.1 is out! maybe is too poor but, its minimalist!
